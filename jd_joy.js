@@ -12,15 +12,12 @@ Combine from Zero-S1/JD_tools(https://github.com/Zero-S1/JD_tools)
 [task_local]
 #京东宠汪汪
 15 0-23/2 * * * https://gitee.com/lxk0301/jd_scripts/raw/master/jd_joy.js, tag=京东宠汪汪, img-url=https://raw.githubusercontent.com/58xinian/icon/master/jdcww.png, enabled=true
-
 ============Loon===========
 [Script]
 cron "15 0-23/2 * * *" script-path=https://gitee.com/lxk0301/jd_scripts/raw/master/jd_joy.js,tag=京东宠汪汪
-
 ============Surge==========
 [Script]
 京东宠汪汪 = type=cron,cronexp="15 0-23/2 * * *",wake-system=1,timeout=3600,script-path=https://gitee.com/lxk0301/jd_scripts/raw/master/jd_joy.js
-
 ===============小火箭==========
 京东宠汪汪 = type=cron,script-path=https://gitee.com/lxk0301/jd_scripts/raw/master/jd_joy.js, cronexpr="15 0-23/2 * * *", timeout=3600, enable=true
 */
@@ -64,7 +61,7 @@ const weAppUrl = 'https://draw.jdfcloud.com//pet';
   for (let i = 0; i < cookiesArr.length; i++) {
     if (cookiesArr[i]) {
       cookie = cookiesArr[i];
-      $.UserName = decodeURIComponent(cookie.match(/pt_pin=(.+?);/) && cookie.match(/pt_pin=(.+?);/)[1])
+      $.UserName = decodeURIComponent(cookie.match(/pt_pin=([^; ]+)(?=;?)/) && cookie.match(/pt_pin=([^; ]+)(?=;?)/)[1])
       $.index = i + 1;
       $.isLogin = true;
       $.nickName = '';
@@ -94,27 +91,31 @@ const weAppUrl = 'https://draw.jdfcloud.com//pet';
       $.done();
     })
 async function jdJoy() {
-  await getPetTaskConfig();
-  if ($.getPetTaskConfigRes.success) {
-    if ($.isNode()) {
-      if (process.env.JOY_FEED_COUNT) {
-        if ([10, 20, 40, 80].indexOf(process.env.JOY_FEED_COUNT * 1) > -1) {
-          FEED_NUM = process.env.JOY_FEED_COUNT ? process.env.JOY_FEED_COUNT * 1 : FEED_NUM;
-        } else {
-          console.log(`您输入的 JOY_FEED_COUNT 为非法数字，请重新输入`);
+  try {
+    await getPetTaskConfig();
+    if ($.getPetTaskConfigRes.success) {
+      if ($.isNode()) {
+        if (process.env.JOY_FEED_COUNT) {
+          if ([10, 20, 40, 80].indexOf(process.env.JOY_FEED_COUNT * 1) > -1) {
+            FEED_NUM = process.env.JOY_FEED_COUNT ? process.env.JOY_FEED_COUNT * 1 : FEED_NUM;
+          } else {
+            console.log(`您输入的 JOY_FEED_COUNT 为非法数字，请重新输入`);
+          }
         }
       }
+      await feedPets(FEED_NUM);//喂食
+      await Promise.all([
+        petTask(),
+        appPetTask()
+      ])
+      await deskGoodsTask();//限时货柜
+      await enterRoom();
+      await joinTwoPeopleRun()//参加双人赛跑
+    } else {
+      message += `${$.getPetTaskConfigRes.errorMessage}`;
     }
-    await feedPets(FEED_NUM);//喂食
-    await Promise.all([
-      petTask(),
-      appPetTask()
-    ])
-    await deskGoodsTask();//限时货柜
-    await enterRoom();
-    await joinTwoPeopleRun()//参加双人赛跑
-  } else {
-    message += `${$.getPetTaskConfigRes.errorMessage}`;
+  } catch (e) {
+    $.logErr(e)
   }
 }
 //逛商品得100积分奖励任务
@@ -1004,7 +1005,7 @@ function TotalBean() {
         "Connection": "keep-alive",
         "Cookie": cookie,
         "Referer": "https://wqs.jd.com/my/jingdou/my.shtml?sceneval=2",
-        "User-Agent": $.isNode() ? (process.env.JD_USER_AGENT ? process.env.JD_USER_AGENT : (require('./USER_AGENTS').USER_AGENT)) : ($.getdata('JDUA') ? $.getdata('JDUA') : "jdapp;iPhone;9.2.2;14.2;%E4%BA%AC%E4%B8%9C/9.2.2 CFNetwork/1206 Darwin/20.1.0")
+        "User-Agent": $.isNode() ? (process.env.JD_USER_AGENT ? process.env.JD_USER_AGENT : (require('./USER_AGENTS').USER_AGENT)) : ($.getdata('JDUA') ? $.getdata('JDUA') : "jdapp;iPhone;9.4.4;14.3;network/4g;Mozilla/5.0 (iPhone; CPU iPhone OS 14_3 like Mac OS X) AppleWebKit/605.1.15 (KHTML, like Gecko) Mobile/15E148;supportJDSHWK/1")
       }
     }
     $.post(options, (err, resp, data) => {
@@ -1046,7 +1047,7 @@ function taskUrl(url, Host, reqSource) {
       'Connection': 'keep-alive',
       'Content-Type': 'application/json',
       'Referer': 'https://jdjoy.jd.com/pet/index',
-      'User-Agent': $.isNode() ? (process.env.JD_USER_AGENT ? process.env.JD_USER_AGENT : (require('./USER_AGENTS').USER_AGENT)) : ($.getdata('JDUA') ? $.getdata('JDUA') : "jdapp;iPhone;9.2.2;14.2;%E4%BA%AC%E4%B8%9C/9.2.2 CFNetwork/1206 Darwin/20.1.0"),
+      'User-Agent': $.isNode() ? (process.env.JD_USER_AGENT ? process.env.JD_USER_AGENT : (require('./USER_AGENTS').USER_AGENT)) : ($.getdata('JDUA') ? $.getdata('JDUA') : "jdapp;iPhone;9.4.4;14.3;network/4g;Mozilla/5.0 (iPhone; CPU iPhone OS 14_3 like Mac OS X) AppleWebKit/605.1.15 (KHTML, like Gecko) Mobile/15E148;supportJDSHWK/1"),
       'Accept-Language': 'zh-cn',
       'Accept-Encoding': 'gzip, deflate, br',
     }
@@ -1058,7 +1059,7 @@ function taskPostUrl(url, body, reqSource, Host, ContentType) {
     body: body,
     headers: {
       'Cookie': cookie,
-      'User-Agent': $.isNode() ? (process.env.JD_USER_AGENT ? process.env.JD_USER_AGENT : (require('./USER_AGENTS').USER_AGENT)) : ($.getdata('JDUA') ? $.getdata('JDUA') : "jdapp;iPhone;9.2.2;14.2;%E4%BA%AC%E4%B8%9C/9.2.2 CFNetwork/1206 Darwin/20.1.0"),
+      'User-Agent': $.isNode() ? (process.env.JD_USER_AGENT ? process.env.JD_USER_AGENT : (require('./USER_AGENTS').USER_AGENT)) : ($.getdata('JDUA') ? $.getdata('JDUA') : "jdapp;iPhone;9.4.4;14.3;network/4g;Mozilla/5.0 (iPhone; CPU iPhone OS 14_3 like Mac OS X) AppleWebKit/605.1.15 (KHTML, like Gecko) Mobile/15E148;supportJDSHWK/1"),
       'reqSource': reqSource,
       'Content-Type': ContentType,
       'Host': Host,
