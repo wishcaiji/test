@@ -7,23 +7,18 @@ crazy joy
 合成条件如下：
 当存在8个34级JOY，并且剩余金币大于等于6Q，则此条件下合并两个34级JOY
 即可为后面继续合成两只新的34级JOY(按全部用30级JOY合成一只34级JOY计算需:166T * 2 * 2 * 2 * 2 = 2.6Q * 2(两只34级JOY) = 5.2Q，取6Q)时
-
 脚本兼容: QuantumultX, Surge, Loon, JSBox, Node.js
 ============Quantumultx===============
 [task_local]
 #crazyJoy挂机
 10 1,12 * * * https://gitee.com/lxk0301/jd_scripts/raw/master/jd_crazy_joy_coin.js, tag=crazyJoy挂机, img-url=https://raw.githubusercontent.com/58xinian/icon/master/jd_crazy_joy.png, enabled=true
-
 ================Loon==============
 [Script]
 cron "10 1,12 * * *" script-path=https://gitee.com/lxk0301/jd_scripts/raw/master/jd_crazy_joy_coin.js,tag=crazyJoy挂机
-
 ===============Surge=================
 crazyJoy挂机 = type=cron,cronexp="10 1,12 * * *",wake-system=1,timeout=20,script-path=https://gitee.com/lxk0301/jd_scripts/raw/master/jd_crazy_joy_coin.js
-
 ============小火箭=========
 crazyJoy挂机 = type=cron,script-path=https://gitee.com/lxk0301/jd_scripts/raw/master/jd_crazy_joy_coin.js, cronexpr="10 1,12 * * *", timeout=200, enable=true
-
  */
 
 const $ = new Env('crazyJoy挂机');

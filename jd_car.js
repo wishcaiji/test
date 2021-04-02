@@ -9,14 +9,11 @@
 [task_local]
 #京东汽车
 10 7 * * * https://gitee.com/lxk0301/jd_scripts/raw/master/jd_car.js, tag=京东汽车, img-url=https://raw.githubusercontent.com/58xinian/icon/master/jd_redPacket.png, enabled=true
-
 ================Loon==============
 [Script]
 cron "10 7 * * *" script-path=https://gitee.com/lxk0301/jd_scripts/raw/master/jd_car.js, tag=京东汽车
-
 ===============Surge=================
 京东汽车 = type=cron,cronexp="10 7 * * *",wake-system=1,timeout=3600,script-path=https://gitee.com/lxk0301/jd_scripts/raw/master/jd_car.js
-
 ============小火箭=========
 京东汽车 = type=cron,script-path=https://gitee.com/lxk0301/jd_scripts/raw/master/jd_car.js, cronexpr="10 7 * * *", timeout=3600, enable=true
  */

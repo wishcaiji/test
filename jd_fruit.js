@@ -14,13 +14,10 @@
 =========================Loon=============================
 [Script]
 cron "5 6-18/6 * * *" script-path=https://gitee.com/lxk0301/jd_scripts/raw/master/jd_fruit.js,tag=东东农场
-
 =========================Surge============================
 东东农场 = type=cron,cronexp="5 6-18/6 * * *",wake-system=1,timeout=3600,script-path=https://gitee.com/lxk0301/jd_scripts/raw/master/jd_fruit.js
-
 =========================小火箭===========================
 东东农场 = type=cron,script-path=https://gitee.com/lxk0301/jd_scripts/raw/master/jd_fruit.js, cronexpr="5 6-18/6 * * *", timeout=3600, enable=true
-
 jd免费水果 搬的https://github.com/liuxiaoyucc/jd-helper/blob/a6f275d9785748014fc6cca821e58427162e9336/fruit/fruit.js
 */
 const $ = new Env('东东农场');
@@ -124,8 +121,10 @@ async function jdFruit() {
     }
   } catch (e) {
     console.log(`任务执行异常，请检查执行日志 ‼️‼️`);
-    message = `任务执行异常，请检查执行日志 ‼️‼️`;
     $.logErr(e);
+    const errMsg = `京东账号${$.index} ${$.nickName || $.UserName}\n任务执行异常，请检查执行日志 ‼️‼️`;
+    if ($.isNode()) await notify.sendNotify(`${$.name}`, errMsg);
+    $.msg($.name, '', `${errMsg}`)
   }
   await showMsg();
 }
@@ -653,7 +652,7 @@ async function masterHelpShare() {
         break
       }
     } else {
-      // console.log(`助力失败::${JSON.stringify($.helpResult)}`);
+      console.log(`助力失败::${JSON.stringify($.helpResult)}`);
     }
   }
   if ($.isLoon() || $.isQuanX() || $.isSurge()) {
@@ -825,7 +824,6 @@ async function doFriendsWater() {
           }
         }
       });
-      //TODO ,发现bug,github action运行发现有些账号第一次没有给3个好友浇水
       console.log(`需要浇水的好友列表shareCodes:${JSON.stringify(needWaterFriends)}`);
       let waterFriendsCount = 0, cardInfoStr = '';
       for (let index = 0; index < needWaterFriends.length; index ++) {
@@ -1282,11 +1280,11 @@ function shareCodesFormat() {
       const tempIndex = $.index > shareCodes.length ? (shareCodes.length - 1) : ($.index - 1);
       newShareCodes = shareCodes[tempIndex].split('@');
     }
-    /* const readShareCodeRes = await readShareCode();
+    const readShareCodeRes = await readShareCode();
     if (readShareCodeRes && readShareCodeRes.code === 200) {
       // newShareCodes = newShareCodes.concat(readShareCodeRes.data || []);
       newShareCodes = [...new Set([...newShareCodes, ...(readShareCodeRes.data || [])])];
-    } */
+    }
     console.log(`第${$.index}个京东账号将要助力的好友${JSON.stringify(newShareCodes)}`)
     resolve();
   })

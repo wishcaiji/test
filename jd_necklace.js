@@ -6,22 +6,17 @@
  */
 /*
 点点券，可以兑换无门槛红包（1元，5元，10元，100元，部分红包需抢购）
-活动入口：京东APP-领券中心/券后9.9-领点点券
-地址：https://h5.m.jd.com/babelDiy/Zeus/41Lkp7DumXYCFmPYtU3LTcnTTXTX/index.html
-已支持IOS双京东账号,Node.js支持N个京东账号
+活动入口：京东APP-领券中心/券后9.9-领点点券 [活动地址](https://h5.m.jd.com/babelDiy/Zeus/41Lkp7DumXYCFmPYtU3LTcnTTXTX/index.html)
 脚本兼容: QuantumultX, Surge, Loon, JSBox, Node.js
 ===============Quantumultx===============
 [task_local]
 #点点券
 10 0,20 * * * https://gitee.com/lxk0301/jd_scripts/raw/master/jd_necklace.js, tag=点点券, img-url=https://raw.githubusercontent.com/Orz-3/mini/master/Color/jd.png, enabled=true
-
 ================Loon==============
 [Script]
 cron "10 0,20 * * *" script-path=https://gitee.com/lxk0301/jd_scripts/raw/master/jd_necklace.js,tag=点点券
-
 ===============Surge=================
 点点券 = type=cron,cronexp="10 0,20 * * *",wake-system=1,timeout=3600,script-path=https://gitee.com/lxk0301/jd_scripts/raw/master/jd_necklace.js
-
 ============小火箭=========
 点点券 = type=cron,script-path=https://gitee.com/lxk0301/jd_scripts/raw/master/jd_necklace.js, cronexpr="10 0,20 * * *", timeout=3600, enable=true
  */
@@ -82,14 +77,18 @@ const JD_API_HOST = 'https://api.m.jd.com/api';
       $.done();
     })
 async function jd_necklace() {
-  await necklace_homePage();
-  await doTask();
-  await necklace_homePage();
-  await receiveBubbles();
-  await sign();
-  await necklace_homePage();
-  // await necklace_exchangeGift($.totalScore);//自动兑换多少钱的无门槛红包，1000代表1元，默认兑换全部点点券
-  await showMsg();
+  try {
+    await necklace_homePage();
+    await doTask();
+    await necklace_homePage();
+    await receiveBubbles();
+    await sign();
+    await necklace_homePage();
+    // await necklace_exchangeGift($.totalScore);//自动兑换多少钱的无门槛红包，1000代表1元，默认兑换全部点点券
+    await showMsg();
+  } catch (e) {
+    $.logErr(e)
+  }
 }
 function showMsg() {
   return new Promise(async resolve => {
@@ -313,6 +312,8 @@ function necklace_getTask(taskId) {
 
 function necklace_homePage() {
   $.taskConfigVos = [];
+  $.bubbles = [];
+  $.signInfo = {};
   return new Promise(resolve => {
     $.post(taskPostUrl('necklace_homePage'), async (err, resp, data) => {
       try {

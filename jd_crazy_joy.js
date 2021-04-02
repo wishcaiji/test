@@ -1,26 +1,20 @@
 /*
 crazyJoy任务
-
 每天运行一次即可
-
 活动入口：京东APP我的-更多工具-疯狂的JOY
 已支持IOS双京东账号,Node.js支持N个京东账号
 脚本兼容: QuantumultX, Surge, Loon, JSBox, Node.js
 ============Quantumultx===============
 [task_local]
 #crazyJoy任务
-10 7 * * * https://gitee.com/lxk0301/jd_scripts/raw/master/jd_crazy_joy.js, tag=crazyJoy任务, img-url=https://raw.githubusercontent.com/58xinian/icon/master/jd_crazy_joy.png, enabled=true
-
+10 9 * * * https://gitee.com/lxk0301/jd_scripts/raw/master/jd_crazy_joy.js, tag=crazyJoy任务, img-url=https://raw.githubusercontent.com/58xinian/icon/master/jd_crazy_joy.png, enabled=true
 ================Loon==============
 [Script]
-cron "10 7 * * *" script-path=https://gitee.com/lxk0301/jd_scripts/raw/master/jd_crazy_joy.js,tag=crazyJoy任务
-
+cron "10 9 * * *" script-path=https://gitee.com/lxk0301/jd_scripts/raw/master/jd_crazy_joy.js,tag=crazyJoy任务
 ===============Surge=================
-crazyJoy任务 = type=cron,cronexp="10 7 * * *",wake-system=1,timeout=3600,script-path=https://gitee.com/lxk0301/jd_scripts/raw/master/jd_crazy_joy.js
-
+crazyJoy任务 = type=cron,cronexp="10 9 * * *",wake-system=1,timeout=3600,script-path=https://gitee.com/lxk0301/jd_scripts/raw/master/jd_crazy_joy.js
 ============小火箭=========
-crazyJoy任务 = type=cron,script-path=https://gitee.com/lxk0301/jd_scripts/raw/master/jd_crazy_joy.js, cronexpr="10 7 * * *", timeout=3600, enable=true
-
+crazyJoy任务 = type=cron,script-path=https://gitee.com/lxk0301/jd_scripts/raw/master/jd_crazy_joy.js, cronexpr="10 9 * * *", timeout=3600, enable=true
  */
 
 
@@ -619,10 +613,10 @@ function shareCodesFormat() {
       const tempIndex = $.index > inviteCodes.length ? (inviteCodes.length - 1) : ($.index - 1);
       $.newShareCodes = inviteCodes[tempIndex].split('@');
     }
-    /* const readShareCodeRes = await readShareCode();
+    const readShareCodeRes = await readShareCode();
     if (readShareCodeRes && readShareCodeRes.code === 200) {
       $.newShareCodes = [...new Set([...$.newShareCodes, ...(readShareCodeRes.data || [])])];
-    } */
+    }
     console.log(`第${$.index}个京东账号将要助力的好友${JSON.stringify($.newShareCodes)}`)
     resolve();
   })

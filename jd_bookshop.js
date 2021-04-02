@@ -7,14 +7,11 @@
 [task_local]
 #口袋书店
 1 8,12,18 * * * https://gitee.com/lxk0301/jd_scripts/raw/master/jd_bookshop.js, tag=口袋书店, img-url=https://raw.githubusercontent.com/Orz-3/mini/master/Color/jd.png, enabled=true
-
 ================Loon==============
 [Script]
 cron "1 8,12,18 * * *" script-path=https://gitee.com/lxk0301/jd_scripts/raw/master/jd_bookshop.js,tag=口袋书店
-
 ===============Surge=================
 口袋书店 = type=cron,cronexp="1 8,12,18 * * *",wake-system=1,timeout=3600,script-path=https://gitee.com/lxk0301/jd_scripts/raw/master/jd_bookshop.js
-
 ============小火箭=========
 口袋书店 = type=cron,script-path=https://gitee.com/lxk0301/jd_scripts/raw/master/jd_bookshop.js, cronexpr="1 8,12,18* * *", timeout=3600, enable=true
  */
@@ -24,7 +21,7 @@ const jdCookieNode = $.isNode() ? require('./jdCookie.js') : '';
 //Node.js用户请在jdCookie.js处填写京东ck;
 //IOS等用户直接用NobyDa的jd cookie
 let cookiesArr = [], cookie = '', message;
-const ACT_ID = 'dz2010100034444201', shareUuid = '6e443b680c5d4d89ad4796778c40599d'
+const ACT_ID = 'dz2010100034444201', shareUuid = '28a699ac78d74aa3b31f7103597f8927'
 let ADD_CART = false
 ADD_CART = $.isNode() ? (process.env.PURCHASE_SHOPS ? process.env.PURCHASE_SHOPS : ADD_CART) : ($.getdata("ADD_CART") ? $.getdata("ADD_CART") : ADD_CART);
 // 加入购物车开关，与东东小窝共享
@@ -59,6 +56,7 @@ if ($.isNode()) {
       $.isLogin = true;
       $.nickName = '';
       message = '';
+      $.exit = false;
       await TotalBean();
       console.log(`\n******开始【京东账号${$.index}】${$.nickName || $.UserName}*********\n`);
       if (!$.isLogin) {
@@ -552,8 +550,10 @@ function chargeGold() {
 
 function showMsg() {
   return new Promise(resolve => {
-    message += `本次运行获得积分${$.score}`;
-    $.msg($.name, '', `京东账号${$.index}${$.nickName}\n${message}`);
+    if ($.score) {
+      message += `本次运行获得积分${$.score}`;
+      $.msg($.name, '', `京东账号${$.index}${$.nickName}\n${message}`);
+    }
     resolve()
   })
 }
@@ -664,10 +664,10 @@ function shareCodesFormat() {
       const tempIndex = $.index > inviteCodes.length ? (inviteCodes.length - 1) : ($.index - 1);
       $.newShareCodes = inviteCodes[tempIndex].split('@');
     }
-    /* const readShareCodeRes = null //await readShareCode();
+    const readShareCodeRes = null //await readShareCode();
     if (readShareCodeRes && readShareCodeRes.code === 200) {
       $.newShareCodes = [...new Set([...$.newShareCodes, ...(readShareCodeRes.data || [])])];
-    } */
+    }
     console.log(`第${$.index}个京东账号将要助力的好友${JSON.stringify($.newShareCodes)}`)
     resolve();
   })

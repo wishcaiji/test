@@ -4,25 +4,19 @@
 活动入口：京东APP我的-更多工具-东东萌宠
 已支持IOS双京东账号,Node.js支持N个京东账号
 脚本兼容: QuantumultX, Surge, Loon, JSBox, Node.js
-
 互助码shareCode请先手动运行脚本查看打印可看到
 一天只能帮助5个人。多出的助力码无效
-
 =================================Quantumultx=========================
 [task_local]
 #东东萌宠
 15 6-18/6 * * * https://gitee.com/lxk0301/jd_scripts/raw/master/jd_pet.js, tag=东东萌宠, img-url=https://raw.githubusercontent.com/58xinian/icon/master/jdmc.png, enabled=true
-
 =================================Loon===================================
 [Script]
 cron "15 6-18/6 * * *" script-path=https://gitee.com/lxk0301/jd_scripts/raw/master/jd_pet.js,tag=东东萌宠
-
 ===================================Surge================================
 东东萌宠 = type=cron,cronexp="15 6-18/6 * * *",wake-system=1,timeout=3600,script-path=https://gitee.com/lxk0301/jd_scripts/raw/master/jd_pet.js
-
 ====================================小火箭=============================
 东东萌宠 = type=cron,script-path=https://gitee.com/lxk0301/jd_scripts/raw/master/jd_pet.js, cronexpr="15 6-18/6 * * *", timeout=3600, enable=true
-
 */
 const $ = new Env('东东萌宠');
 let cookiesArr = [], cookie = '', jdPetShareArr = [], isBox = false, notify, newShareCodes, allMessage = '';
@@ -141,6 +135,9 @@ async function jdPet() {
     }
   } catch (e) {
     $.logErr(e)
+    const errMsg = `京东账号${$.index} ${$.nickName || $.UserName}\n任务执行异常，请检查执行日志 ‼️‼️`;
+    if ($.isNode()) await notify.sendNotify(`${$.name}`, errMsg);
+    $.msg($.name, '', `${errMsg}`)
   }
 }
 // 收取所有好感度
@@ -481,12 +478,12 @@ function shareCodesFormat() {
       const tempIndex = $.index > shareCodes.length ? (shareCodes.length - 1) : ($.index - 1);
       newShareCodes = shareCodes[tempIndex].split('@');
     }
-   /*  //因好友助力功能下线。故暂时屏蔽
+    //因好友助力功能下线。故暂时屏蔽
     const readShareCodeRes = await readShareCode();
     //const readShareCodeRes = null;
     if (readShareCodeRes && readShareCodeRes.code === 200) {
       newShareCodes = [...new Set([...newShareCodes, ...(readShareCodeRes.data || [])])];
-    } */
+    }
     console.log(`第${$.index}个京东账号将要助力的好友${JSON.stringify(newShareCodes)}`)
     resolve();
   })

@@ -15,14 +15,11 @@
 [task_local]
 #宠汪汪积分兑换奖品
 0 0-16/8 * * * https://gitee.com/lxk0301/jd_scripts/raw/master/jd_joy_reward.js, tag=宠汪汪积分兑换奖品, img-url=https://raw.githubusercontent.com/58xinian/icon/master/jdcww.png, enabled=true
-
 ==============Loon==============
 [Script]
 cron "0 0-16/8 * * *" script-path=https://gitee.com/lxk0301/jd_scripts/raw/master/jd_joy_reward.js,tag=宠汪汪积分兑换奖品
-
 ================Surge===============
 宠汪汪积分兑换奖品 = type=cron,cronexp="0 0-16/8 * * *",wake-system=1,timeout=3600,script-path=https://gitee.com/lxk0301/jd_scripts/raw/master/jd_joy_reward.js
-
 ===============小火箭==========
 宠汪汪积分兑换奖品 = type=cron,script-path=https://gitee.com/lxk0301/jd_scripts/raw/master/jd_joy_reward.js, cronexpr="0 0-16/8 * * *", timeout=3600, enable=true
  */
@@ -37,7 +34,7 @@ cron "0 0-16/8 * * *" script-path=https://gitee.com/lxk0301/jd_scripts/raw/maste
 
 const $ = new Env('宠汪汪积分兑换奖品');
 let allMessage = '';
-let joyRewardName = 500;//是否兑换京豆，默认0不兑换京豆，其中20为兑换20京豆,500为兑换500京豆，0为不兑换京豆.数量有限先到先得
+let joyRewardName = 0;//是否兑换京豆，默认0不兑换京豆，其中20为兑换20京豆,500为兑换500京豆，0为不兑换京豆.数量有限先到先得
 //Node.js用户请在jdCookie.js处填写京东ck;
 const jdCookieNode = $.isNode() ? require('./jdCookie.js') : '';
 const notify = $.isNode() ? require('./sendNotify') : '';

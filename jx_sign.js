@@ -6,14 +6,11 @@
 [task_local]
 #京喜签到
 5 0 * * * https://gitee.com/lxk0301/jd_scripts/raw/master/jx_sign.js, tag=京喜签到, img-url=https://raw.githubusercontent.com/Orz-3/mini/master/Color/jd.png, enabled=true
-
 ================Loon==============
 [Script]
 cron "5 0 * * *" script-path=https://gitee.com/lxk0301/jd_scripts/raw/master/jx_sign.js,tag=京喜签到
-
 ===============Surge=================
 京喜签到 = type=cron,cronexp="5 0 * * *",wake-system=1,timeout=3600,script-path=https://gitee.com/lxk0301/jd_scripts/raw/master/jx_sign.js
-
 ============小火箭=========
 京喜签到 = type=cron,script-path=https://gitee.com/lxk0301/jd_scripts/raw/master/jx_sign.js, cronexpr="5 0 * * *", timeout=3600, enable=true
  */
@@ -24,7 +21,7 @@ const jdCookieNode = $.isNode() ? require('./jdCookie.js') : '';
 let jdNotify = true;//是否关闭通知，false打开通知推送，true关闭通知推送
 //IOS等用户直接用NobyDa的jd cookie
 let cookiesArr = [], cookie = '', message;
-let helpAuthor = false
+let helpAuthor = true
 if ($.isNode()) {
   Object.keys(jdCookieNode).forEach((item) => {
     cookiesArr.push(jdCookieNode[item])
